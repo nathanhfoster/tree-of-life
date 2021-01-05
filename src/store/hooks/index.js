@@ -12,7 +12,7 @@ import { shallowEquals } from '../utils'
 const useContext = (context = ContextConsumer) => reactUseContext(context)
 
 const usePrevious = value => {
-  let ref = useRef()
+  let ref = useRef(value)
 
   useEffect(() => {
     ref.current = value
