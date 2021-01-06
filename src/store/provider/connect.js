@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useMemo } from 'react'
-import { usePrevious, useContext } from '../hooks'
+import { usePreviousValue, useContext } from '../hooks'
 import { ContextConsumer } from './'
 import { shallowEquals } from '../utils'
 
@@ -54,7 +54,7 @@ const connect = (mapStateToProps, mapDispatchToProps) => Component => ownProps =
     getMapStateToProps(mapStateToProps, state, ownProps),
   )
 
-  const prevStateToProps = usePrevious(stateToProps)
+  const prevStateToProps = usePreviousValue(stateToProps)
 
   // Check if Component should rerender
   useLayoutEffect(() => {

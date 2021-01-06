@@ -1,51 +1,63 @@
-import { useEffect } from 'react'
+import { useLayoutEffect, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from '..'
-import { isQuotaExceeded, isAFunction } from '../utils'
+import localforage from 'localforage'
+import { connect } from 'store'
+import { LoadReducerState } from 'store/reducers/App/actions'
+import { usePreviousValue } from 'store/hooks'
+
+export const DATEBASE_SIZE = 5000 * 1024 * 1024
+
+export const INDEX_DB_KEY = 'TreeOfLifeDB'
+
+export const TreeOfLifeDB = localforage.createInstance({
+  driver: localforage.WEBSQL, // Force WebSQL; same as using setDriver()
+  name: INDEX_DB_KEY,
+  version: 1.0,
+  size: DATEBASE_SIZE, // Size of database, in bytes. WebSQL-only for now.
+  storeName: 'keyvaluepairs', // Should be alphanumeric, with underscores.
+  description: 'Astral Tree local database',
+})
 
 const mapStateToProps = state => ({ state })
 
-const Persistor = ({ persistKey, debounce, whenQuotaExceeds, state }) => {
-  // persist storage if persistConfig exists
+const mapDispatchToProps = { LoadReducerState }
+
+const Persistor = ({ debounce, whenQuotaExceeds, state, LoadReducerState }) => {
+  console.log(state)
+  const prevState = usePreviousValue(state)
+
+  useLayoutEffect(() => {
+    ;(async () => {
+      const persistedSate = await TreeOfLifeDB.getItem(INDEX_DB_KEY).then(s => JSON.parse(s))
+      LoadReducerState(persistedSate)
+    })()
+  }, [])
+
   useEffect(() => {
-    if (persistKey) {
-      // const filteredState = Object.keys(state).reduce((newState, key) => {
-      //     if (
-      //         (blackList?.length > 0 && blackList.includes(key)) ||
-      //         (whiteList?.length > 0 && !whiteList.includes(key))
-      //     ) {
-      //         delete newState[key];
-      //     }
-      //     return newState;
-      // }, state);
-
-      const persistDebounce = setTimeout(() => {
-        let stringifiedState = JSON.stringify(state)
-        try {
-          localStorage.setItem(persistKey, stringifiedState)
-        } catch (e) {
-          if (isQuotaExceeded(e) && isAFunction(whenQuotaExceeds)) {
-            localStorage.setItem(persistKey, JSON.stringify(whenQuotaExceeds(state)))
-          }
-        }
-      }, debounce)
-
-      return () => {
-        clearTimeout(persistDebounce)
+    const persistDebounce = setTimeout(() => {
+      try {
+        TreeOfLifeDB.setItem(INDEX_DB_KEY, JSON.stringify(state))
+      } catch (e) {
+        console.log(e)
       }
+    }, debounce)
+
+    return () => {
+      clearTimeout(persistDebounce)
+      // TreeOfLifeDB.clear()
     }
-  }, [state, persistKey])
+  }, [state, prevState, debounce, whenQuotaExceeds])
 
   return null
 }
 
 Persistor.propTypes = {
-  persistKey: PropTypes.string.isRequired,
   debounce: PropTypes.number.isRequired,
   whenQuotaExceeds: PropTypes.func,
   state: PropTypes.objectOf(PropTypes.object),
+  LoadReducerState: PropTypes.func.isRequired,
 }
 
-Persistor.defaultProps = { persistKey: 'ReduxState', debounce: 400 }
+Persistor.defaultProps = { debounce: 400 }
 
-export default connect(mapStateToProps)(Persistor)
+export default connect(mapStateToProps, mapDispatchToProps)(Persistor)

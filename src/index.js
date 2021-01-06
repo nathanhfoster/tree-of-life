@@ -1,15 +1,24 @@
-import React from 'react'
+import 'css/index.css'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
+import { LoadingScreen } from 'components'
 import { ContextProvider } from 'store'
 import * as reducers from 'store/reducers'
 
+const Persistor = lazy(
+  () => new Promise(resolve => setTimeout(() => resolve(import('./store/Persistor')), 2000)),
+)
+
 ReactDOM.render(
-  <ContextProvider reducers={reducers}>
-    <App />
-  </ContextProvider>,
+  <Suspense fallback={<LoadingScreen />}>
+    <ContextProvider reducers={reducers}>
+      <Persistor />
+      <App />
+    </ContextProvider>
+  </Suspense>,
   document.getElementById('root'),
 )
 

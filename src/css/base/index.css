@@ -1,0 +1,215 @@
+@import './animations/index.css';
+.App {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  /* color: white; */
+}
+
+.RouteOverlay {
+  overflow: hidden;
+  position: absolute;
+  z-index: 102;
+  top: var(--navBarHeight);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* min-height: -webkit-fill-available;
+  height: 100vh;
+  width: 100vw; */
+}
+
+.Container {
+  height: 100%;
+  overflow-y: auto;
+  touch-action: pan-x;
+  touch-action: pan-y;
+  color: var(--secondaryColor);
+}
+
+.Center {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Overflow {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+body {
+  background-repeat: no-repeat;
+  overflow: hidden;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+a:hover {
+  outline: none !important;
+  text-decoration: none !important;
+}
+
+.help {
+  display: flex;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--grey);
+  margin-bottom: 8px;
+}
+
+.help-inline {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--grey);
+  margin-left: 4px;
+}
+
+.Absolute-Center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
+input[type='datetime-local'] {
+  min-height: var(--inputHeight);
+  padding: 0.5rem !important;
+  border: inherit;
+  background: var(--quinaryColor) !important;
+  color: var(--secondaryColor);
+}
+
+input[type='date'] {
+  position: relative;
+  padding: 10px;
+}
+/* input[type='date']::-webkit-calendar-picker-indicator {
+  color: transparent;
+  background: none;
+  z-index: 1;
+}
+
+input[type='date']:before {
+  color: transparent;
+  background: none;
+  display: block;
+  font-family: 'FontAwesome';
+  content: '\f073';
+  width: 15px;
+  height: 20px;
+  position: absolute;
+  top: calc(var(--inputHeight) / 4);
+  right: calc(var(--inputHeight) / 4);
+  color: #999;
+} */
+
+input[type='time']::-webkit-calendar-picker-indicator,
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  filter: invert(64%) sepia(13%) saturate(0%) hue-rotate(184deg) brightness(92%) contrast(95%);
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  /* background: var(--quinaryColor); */
+  cursor: pointer;
+  filter: invert(60%) sepia(10%) saturate(0%) hue-rotate(184deg) brightness(90%) contrast(90%) !important;
+}
+
+::-webkit-datetime-edit {
+  /* padding: 0.1em; */
+}
+::-webkit-datetime-edit-fields-wrapper {
+  background: var(--quinaryColor);
+}
+::-webkit-datetime-edit-text {
+  /* padding: 0.1em; */
+}
+::-webkit-datetime-edit-month-field {
+  color: var(--secondaryColor);
+}
+::-webkit-datetime-edit-day-field {
+  color: var(--secondaryColor);
+}
+::-webkit-datetime-edit-year-field {
+  color: var(--secondaryColor);
+}
+
+
+/* input[type="file"] {
+  display: none;
+} */
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--tertiarycolor);
+  opacity: 1;
+  /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: var(--tertiarycolor);
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: var(--tertiarycolor);
+}
+
+/* *:hover {
+  transition: color 0.4s ease;
+  transition: background-color 0.4s ease;
+} */
+
+/* Remove Scrollbar */
+
+.ShowScrollBar ::-webkit-scrollbar {
+  display: block;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  height: 0.25rem;
+  width: 0.25rem;
+  background-color: transparent;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  transition: 200ms linear;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: transparent;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 5px var(--grey);
+  background: var(--grey; */
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--grey);
+  border-radius: 6px;
+}
+
+.add-plus::after {
+  content: '+';
+  padding-left: 1px;
+}
+
+.add-minus::after {
+  content: '-';
+  padding-left: 1px;
+}

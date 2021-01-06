@@ -9,9 +9,9 @@ import {
 import { ContextConsumer } from '../provider'
 import { shallowEquals } from '../utils'
 
-const useContext = (context = ContextConsumer) => reactUseContext(context)
+export const useContext = (context = ContextConsumer) => reactUseContext(context)
 
-const usePrevious = value => {
+export const usePreviousValue = value => {
   let ref = useRef()
 
   useEffect(() => {
@@ -21,15 +21,19 @@ const usePrevious = value => {
   return ref.current
 }
 
-const defaultIsEqual = (nextSelector, previousSelector) =>
+export const defaultIsEqual = (nextSelector, previousSelector) =>
   shallowEquals(previousSelector, nextSelector)
 
-const useSelector = (context, mapStateToSelector, isEqual = defaultIsEqual) => {
+export const useSelector = (
+  mapStateToSelector,
+  isEqual = defaultIsEqual,
+  context = ContextConsumer,
+) => {
   const { state } = useContext(context)
 
   const [selector, setSelector] = useState(mapStateToSelector(state))
 
-  const previousSelector = usePrevious(selector)
+  const previousSelector = usePreviousValue(selector)
 
   useLayoutEffect(() => {
     if (previousSelector) {
@@ -44,11 +48,9 @@ const useSelector = (context, mapStateToSelector, isEqual = defaultIsEqual) => {
   return selector
 }
 
-const useDispatch = (context = ContextConsumer) => {
+export const useDispatch = (context = ContextConsumer) => {
   const { dispatch } = useContext(context)
   const memoizedDispatch = useMemo(() => dispatch, [dispatch])
 
   return memoizedDispatch
 }
-
-export { useSelector, useDispatch, useContext, usePrevious }
