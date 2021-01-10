@@ -7,10 +7,9 @@ import * as serviceWorker from './serviceWorker'
 import { LoadingScreen } from 'components'
 import { ContextProvider } from 'store'
 import * as reducers from 'store/reducers'
+import { lazyDelay } from 'utils'
 
-const Persistor = lazy(
-  () => new Promise(resolve => setTimeout(() => resolve(import('./store/Persistor')), 2000)),
-)
+const Persistor = lazy(() => import('./store/Persistor').then(lazyDelay(2000)))
 
 ReactDOM.render(
   <Suspense fallback={<LoadingScreen />}>
