@@ -17,7 +17,11 @@ export const GetAppVersion = () => (dispatch, getState) => {
     .catch(({ response }) => console.log('ERROR: ', response))
 }
 
-export const LoadReducerState = state => ({
-  type: AppActionTypes.LOAD_PERSISTED_STATE,
-  payload: state || {},
-})
+export const LoadReducerState = state => dispatch => {
+  const payload = state || {}
+  dispatch({
+    type: AppActionTypes.LOAD_PERSISTED_STATE,
+    payload,
+  })
+  return new Promise(resolve => resolve(payload))
+}

@@ -1,35 +1,36 @@
-import { useLayoutEffect, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import localforage from 'localforage'
-import { connect } from 'store'
-import { LoadReducerState } from 'store/reducers/App/actions'
-import { usePreviousValue } from 'store/hooks'
+import { useLayoutEffect, useEffect } from "react"
+import PropTypes from "prop-types"
+import localforage from "localforage"
+import { connect } from "store"
+import { LoadReducerState } from "store/reducers/App/actions"
+import { usePreviousValue } from "store/hooks"
 
 export const DATEBASE_SIZE = 5000 * 1024 * 1024
 
-export const INDEX_DB_KEY = 'TreeOfLifeDB'
+export const INDEX_DB_KEY = "TreeOfLifeDB"
 
 export const TreeOfLifeDB = localforage.createInstance({
   driver: localforage.WEBSQL, // Force WebSQL; same as using setDriver()
   name: INDEX_DB_KEY,
   version: 1.0,
   size: DATEBASE_SIZE, // Size of database, in bytes. WebSQL-only for now.
-  storeName: 'keyvaluepairs', // Should be alphanumeric, with underscores.
-  description: 'Astral Tree local database',
+  storeName: "keyvaluepairs", // Should be alphanumeric, with underscores.
+  description: "Tree of Life local database",
 })
 
-const mapStateToProps = state => ({ state })
+const mapStateToProps = (state) => ({ state })
 
 const mapDispatchToProps = { LoadReducerState }
 
 const Persistor = ({ debounce, whenQuotaExceeds, state, LoadReducerState }) => {
-  console.log(state)
   const prevState = usePreviousValue(state)
 
   useLayoutEffect(() => {
     ;(async () => {
-      const persistedSate = await TreeOfLifeDB.getItem(INDEX_DB_KEY).then(s => JSON.parse(s))
-      LoadReducerState(persistedSate)
+      const persistedSate = await TreeOfLifeDB.getItem(INDEX_DB_KEY).then((s) =>
+        JSON.parse(s)
+      )
+      await LoadReducerState(persistedSate)
     })()
   }, [])
 
